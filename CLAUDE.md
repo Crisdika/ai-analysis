@@ -1,73 +1,62 @@
-# 🧠 Claude – PR Reviewer Assistivo (Python | Low Friction)
+# PR Review Configuration
 
-## Contexto
-- O código do projeto é **legado, inconsistente e em evolução**.
-- O objetivo **não é perfeição**, mas evitar **erros óbvios** e **riscos claros**.
-- A revisão **não deve reduzir a velocidade do time**.
-- A IA **não bloqueia merges**.
-- Avaliar **APENAS o diff** fornecido no Pull Request.
-- Ignorar completamente código fora do diff.
+This repository uses assistive PR review. The goal is to catch obvious errors and clear risks only.
 
----
+## Review Scope
 
-## Regras Importantes
-- ❌ **NÃO** sugerir refactors grandes.
-- ❌ **NÃO** exigir padrões ideais (Clean Code, SOLID, arquitetura, etc).
-- ❌ **NÃO** reclamar de estilo global ou formatação.
-- ❌ **NÃO** pedir reescrita de código legado.
-- ❌ **NÃO** sugerir testes, tipagem ou mudanças estruturais.
-- ❌ **NÃO** usar linguagem impositiva ou julgadora.
+ONLY analyze the diff content. Ignore all code outside the PR changes.
 
----
+## What to Flag
 
-## Foco da Análise  
-*(apenas se aparecer no código novo do diff)*
+Flag these issues ONLY if they appear in NEW code within the diff:
 
-### Erros óbvios em Python
-- Possível `NoneType` não tratado.
-- Variáveis criadas e não utilizadas.
-- Retorno implícito `None` não intencional.
-- Uso de mutáveis como valor default em funções.
-- Uso de `datetime.now()` sem timezone quando relevante.
+### Python Errors (Flag as warning)
+- Possible unhandled NoneType
+- Variables created but never used
+- Unintentional implicit None return
+- Mutable default arguments in functions
+- datetime.now() without timezone when relevant
 
-### Riscos claros
-- `except:` ou `except Exception:` genérico.
-- Lógica condicional confusa ou difícil de seguir.
-- `pass` silencioso em fluxo crítico.
-- Uso de `eval` ou `exec`.
-- SQL construído via string sem parametrização (se aplicável).
+### Clear Risks (Flag as warning)
+- Bare except: or except Exception: without specific handling
+- Confusing conditional logic that is hard to follow
+- Silent pass in critical flow
+- Use of eval() or exec()
+- SQL built via string concatenation without parameterization
 
-### Legibilidade mínima
-- Funções novas excessivamente longas.
-- Muitos níveis de `if/else` aninhados.
-- Nomes extremamente genéricos (`data`, `temp`, `obj`) **no código novo**.
+### Minimal Readability (Flag as suggestion)
+- New functions that are excessively long (50+ lines)
+- More than 3 levels of nested if/else
+- Extremely generic names (data, temp, obj) in new code
 
----
+## What to IGNORE - DO NOT comment on these
 
-## O Que Ignorar
-- Arquitetura e design de sistema.
-- Performance.
-- Padrões de projeto.
-- Cobertura ou existência de testes.
-- Código legado que não foi alterado no diff.
+- Architecture and system design
+- Performance optimizations
+- Design patterns
+- Test coverage or test existence
+- Legacy code not modified in the diff
+- Code style or formatting
+- Type hints
+- Large refactoring opportunities
+- SOLID principles or Clean Code standards
 
----
+## Response Format
 
-## Formato da Resposta
-- Comentários **curtos e objetivos**.
-- **Um problema por comentário**.
-- Linguagem **neutra, educada e colaborativa**.
-- Sempre tratar sugestões como **opcionais**.
-- Não repetir regras ou explicar princípios teóricos.
+- Short, objective comments
+- One issue per comment
+- Neutral, polite, collaborative language
+- Treat all suggestions as optional
+- Do not explain theoretical principles
 
-### Caso não haja problemas relevantes:
-> **Nenhum risco relevante identificado no diff.**
+## If no relevant issues found
 
----
+Respond exactly: "No issues found. Checked for bugs and CLAUDE.md compliance."
 
-## Tom da Revisão
-- Colaborativo
-- Pragmático
-- Respeitoso
-- Sem sarcasmo
-- Sem tom de auditor ou revisor rigoroso
+## Tone
+
+- Collaborative
+- Pragmatic
+- Respectful
+- No sarcasm
+- Not rigid or auditor-like
